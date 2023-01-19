@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { Canvas, Layer, t, type Render } from 'svelte-canvas';
 	import { onMount } from 'svelte'
 
 	export let margin = 100
@@ -7,48 +8,25 @@
 	// Reactive statements. Ordering matters !
 	$: width = height * aspect_ratio
 
+	// Get the canvas context
 	let canvas_node;
-
 	onMount(() => {
 		const context = canvas_node.getContext('2d')
 	})
 
 	let playing = false;
 
+	// Render function
+	let render: Render;
+	$: render = ( { context, width, height }) => {
+	};
 </script>
 
-<article>
-	{#if !playing}
-	<div>
-		<strong>
-			"Left score"
-		</strong>
-		<button on:click={platin}> Play </button>
-		<strong>
-			"Right score"
-		</strong>
-	</div>
-	{/if}
-	<canvas
-		bind:this={canvas_node}
-		{height}
-		{width}
-	>
-	</canvas>
-</article>
-
-
-
-<style>
-	canvas {
-		/*Center canvas*/
-		position: fixed;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		/*Style*/
-		background-color: black;
-		border: 5px solid green;
-		border-radius: 10px
-	}
-</style>
+<!-- Center canvas horiz and vertically -->
+<Canvas
+	{width}
+	{height}
+	style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 5px solid black; border-radius: 10px;"
+ >
+ <Layer {render} />
+</Canvas>
