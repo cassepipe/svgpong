@@ -19,6 +19,7 @@
     "vite": "^4.0.0"
   },
   "dependencies": {
-    "svelte-canvas": "^0.8.1"
+    "svelte-canvas": "^0.8.1",
+    "three": "^0.148.0"
   }
 }

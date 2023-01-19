@@ -1,18 +1,20 @@
 <script lang="ts">
 	import { Canvas, Layer, t, type Render } from 'svelte-canvas';
 	import { onMount } from 'svelte'
+	import { Paddle, Ball } from './GameObjects'
+
+	import * as THREE from 'three'
+	import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+	import { Font } from 'three/examples/jsm/loaders/FontLoader'
+	import { FontLoader } from 'three/examples/jsm/loaders/FontLoader'
+	import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry'
 
 	export let margin = 100
 	export let height = window.innerHeight - margin // Could we resize by making this a reactive statement ?
-	export let aspect_ratio = 16/9
+	//export let aspect_ratio = 16/9
+	export let aspect_ratio = 9/9
 	// Reactive statements. Ordering matters !
 	$: width = height * aspect_ratio
-
-	// Get the canvas context
-	let canvas_node;
-	onMount(() => {
-		const context = canvas_node.getContext('2d')
-	})
 
 	let playing = false;
 
@@ -30,3 +32,4 @@
  >
  <Layer {render} />
 </Canvas>
+
