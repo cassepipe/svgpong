@@ -10,6 +10,7 @@
 
 <style>
 	nav {
+		background-color: lightblue;
 		display: flex;
 		justify-content: center;
 		align-items: center;

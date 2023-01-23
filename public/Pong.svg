@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <g transform="matrix(1, 0, 0, 1, -55.9505, -131.662201)" id="game" class="game">
+    <title>Pong</title>
+    <g transform="matrix(1, 0, 0, 1, -6.216499, -13.985789)" class="court game" id="court">
+      <title>Court</title>
+      <rect x="62.167" y="145.648" width="388.099" height="210.48" style="stroke: rgb(73, 255, 1); paint-order: stroke; stroke-width: 10px;" class="court" id="court_rect">
+        <title>court_rect</title>
+      </rect>
+      <path style="fill: rgb(255, 12, 12); stroke-dasharray: 8px; stroke: rgb(29, 248, 0);" d="M 256.216 145.648 L 256.216 357.904 L 256.216 145.648 Z" id="net" class="court">
+        <title>net</title>
+      </path>
+    </g>
+    <g style="" transform="matrix(1.108883, 0, 0, 0.510067, -23.28146, 111.897232)" class="paddles game" id="paddles">
+      <title>Paddles</title>
+      <rect x="91.474" y="179.396" width="6.313" height="105.868" style="stroke: rgb(0, 0, 0); fill: rgb(12, 184, 20); stroke-linecap: round; stroke-linejoin: bevel;" id="lpaddle" class="paddles game">
+        <title>left_paddle</title>
+      </rect>
+      <rect x="390.764" y="176.732" width="6.313" height="105.868" style="stroke: rgb(0, 0, 0); fill: rgb(12, 184, 20); stroke-linejoin: bevel;" id="rpaddle" class="paddles game">
+        <title>right_paddle</title>
+      </rect>
+    </g>
+    <rect x="245.56" y="231.794" width="8.881" height="7.993" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); stroke-linejoin: bevel;" id="ball" class="game">
+      <title>Ball</title>
+    </rect>
+  </g>
+</svg>
