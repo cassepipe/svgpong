@@ -25,8 +25,12 @@
 	let left_score = 0
 	let right_score = 0
 
+	// SVG parameters
+	let court_color="black"
 	let border_color="green"
+	let paddle_color="orange"
 	let border_width=5
+	let paddle_height = height / 4
 </script>
 
 <svg
@@ -38,18 +42,31 @@
 		y="0"
 		{width}
 		{height}
-		stroke="black"
-		fill="black"
+		stroke={court_color}
+		fill={court_color}
 		/>
 	<line
 		x1={width/2} y1="0"
 		x2={width/2} y2={height}
-		stroke="green" stroke-width="5"
+		stroke={border_color}
+		stroke-width={border_width}
 		stroke-dasharray="10"
 		/>
-
+	<rect id=left_paddle
+		x={width / 30}
+		y={height/2 - paddle_height / 2}
+		width={border_width * 2}
+		height={paddle_height}
+		fill={paddle_color}
+	/>
+	<rect id=right_paddle
+		x={width - width / 30}
+		y={height/2 - paddle_height / 2}
+		width={border_width * 2}
+		height={paddle_height}
+		fill={paddle_color}
+	/>
 </svg>
-
 
 <style>
 
