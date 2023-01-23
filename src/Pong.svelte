@@ -9,13 +9,9 @@
 	let playing = false;
 
 	let canvas : HTMLCanvasElement
-	let rect : DOMRect | undefined = {x: 100, y: 100, width: 100, height: 100}
 
 	onMount(() => {
 	})
-
-	let paddle_w = 10
-	let paddle_h = height / 3
 
 	// Render function
 	$: render = ( { context, width, height }) => {
@@ -31,6 +27,10 @@
 	let paddle_color="orange"
 	let border_width=5
 	let paddle_height = height / 4
+	let lpaddle_x = width / 30
+	let lpaddle_y = height/2 - paddle_height / 2 
+	let rpaddle_x = width / 30
+	let rpaddle_y = height/2 - paddle_height / 2 
 </script>
 
 <svg
