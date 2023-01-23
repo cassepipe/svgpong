@@ -1,77 +1,77 @@
 <script lang="ts">
-	import { onMount } from 'svelte'
-
-	export let margin = 100
-	export let height = window.innerHeight - margin 
-	export let aspect_ratio = 16/9
+	export const margin = 100
+	export const height = window.innerHeight - margin 
+	export const aspect_ratio = 16/9
+	let width = height * aspect_ratio
 	$: width = height * aspect_ratio
-
-	let playing = false;
-
-	let canvas : HTMLCanvasElement
-
-	onMount(() => {
-	})
-
-	// Render function
-	$: render = ( { context, width, height }) => {
-		console.log('render')
-	};
 
 	let left_score = 0
 	let right_score = 0
 
 	// SVG parameters
-	let court_color="black"
-	let border_color="green"
-	let paddle_color="orange"
-	let border_width=5
+	let court_color = "black"
+	let border_color = "green"
+	let paddle_color = "orange"
+	let border_width = 5
 	let paddle_height = height / 4
+
+	const paddle_speed = 5
+
 	let lpaddle_x = width / 30
 	let lpaddle_y = height/2 - paddle_height / 2 
-	let rpaddle_x = width / 30
+	let rpaddle_x = width - width / 30
 	let rpaddle_y = height/2 - paddle_height / 2 
+
+	$: lpaddle_y = lpaddle_y
+	$: rpaddle_y = rpaddle_y
 </script>
 
-<svg
-	{width} {height}
-	style:border={`${border_width}px solid ${border_color}`}
-	>
-	<rect
-		x="0"
-		y="0"
-		{width}
-		{height}
-		stroke={court_color}
-		fill={court_color}
+<div id="game-container">
+	<svg
+		{width} {height}
+		style:border={`${border_width}px solid ${border_color}`}
+		>
+		<rect
+			x="0"
+			y="0"
+			{width}
+			{height}
+			stroke={court_color}
+			fill={court_color}
+			/>
+		<line
+			x1={width/2} y1="0"
+			x2={width/2} y2={height}
+			stroke={border_color}
+			stroke-width={border_width}
+			stroke-dasharray="10"
+			/>
+		<rect id=left_paddle
+			x={lpaddle_x}
+			y={lpaddle_y}
+			width={border_width * 2}
+			height={paddle_height}
+			fill={paddle_color}
 		/>
-	<line
-		x1={width/2} y1="0"
-		x2={width/2} y2={height}
-		stroke={border_color}
-		stroke-width={border_width}
-		stroke-dasharray="10"
+		<rect id=right_paddle
+			x={rpaddle_x}
+			y={rpaddle_y}
+			width={border_width * 2}
+			height={paddle_height}
+			fill={paddle_color}
 		/>
-	<rect id=left_paddle
-		x={width / 30}
-		y={height/2 - paddle_height / 2}
-		width={border_width * 2}
-		height={paddle_height}
-		fill={paddle_color}
-	/>
-	<rect id=right_paddle
-		x={width - width / 30}
-		y={height/2 - paddle_height / 2}
-		width={border_width * 2}
-		height={paddle_height}
-		fill={paddle_color}
-	/>
-</svg>
+		<circle
+		/>
+	</svg>
+	<div id="left-score"  class="scores"
+		>{left_score}</div>
+	<div id="right-score" class="scores"
+		>{right_score}</div>
+</div>
 
 <style>
-
 	#game-container {
-		color:			green;
+		color:			red;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -87,12 +87,12 @@
 		z-index: 1;
 	}
 
-	#left_score {
+	#left-score {
 		top: 40px;
 		left: 80px;
 	}
 
-	#right_score {
+	#right-score {
 		top: 40px;
 		right: 80px;
 	}
