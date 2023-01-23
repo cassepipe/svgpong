@@ -1,17 +1,22 @@
 <script lang="ts">
+	// General dimensioning
 	export const margin = 100
 	export const height = window.innerHeight - margin 
 	export const aspect_ratio = 16/9
 	let width = height * aspect_ratio
 	$: width = height * aspect_ratio
 
+	// Game variables
 	let left_score = 0
 	let right_score = 0
+	let playing = false
+
 
 	// SVG parameters
 	let court_color = "black"
 	let border_color = "green"
 	let paddle_color = "orange"
+	let ball_color = "red"
 	let border_width = 5
 	let paddle_height = height / 4
 
@@ -26,7 +31,22 @@
 	$: rpaddle_y = rpaddle_y
 </script>
 
-<div id="game-container">
+<div id=game-container
+	on:dblclick={() => { playing = false }}
+	on:keyup={() => { playing = false }}
+	on:keypress={() => { playing = false }}
+	on:keydown={() => { playing = false }}
+	>
+	<div id="left-score"
+		>{left_score}</div>
+	<div id="right-score"
+		>{right_score}</div>
+	<button id="play-button"
+		style:opacity={playing ? 0 : 1}
+		on:click={() => { playing = true }}
+		>
+		PLAY
+	</button>
 	<svg
 		{width} {height}
 		style:border={`${border_width}px solid ${border_color}`}
@@ -60,13 +80,11 @@
 			height={paddle_height}
 			fill={paddle_color}
 		/>
-		<circle
+		<circle id=ball
+			cx={width/2} cy={height/2} r={border_width * 1.5}
+			fill={ball_color}
 		/>
 	</svg>
-	<div id="left-score"  class="scores"
-		>{left_score}</div>
-	<div id="right-score" class="scores"
-		>{right_score}</div>
 </div>
 
 <style>
@@ -79,21 +97,32 @@
 		position: relative;
 	}
 
-	.scores {
+	#left-score, #right-score, #play-button {
 		font-family:	'Press Start 2P', Arial;
 		font-size:		22px;
 		font-weight:    bold;
 		position: absolute;
 		z-index: 1;
 	}
-
 	#left-score {
 		top: 40px;
 		left: 80px;
 	}
-
 	#right-score {
 		top: 40px;
 		right: 80px;
+	}
+	#play-button {
+		color:	black;
+		background-color: green;
+		border: 2px solid white;
+		border-radius: 2px;
+		padding-top: 5px;
+		padding-left: 7px;
+	}
+	#play-button:hover {
+		color:	green;
+		background-color: white;
+		border: 2px solid green;
 	}
 </style>
