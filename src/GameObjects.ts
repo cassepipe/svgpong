@@ -21,11 +21,6 @@ export class Paddle {
 		this.score = score;
 	}
 
-	show(context) {
-		const { x, y, w, h } = this;
-		context.fillRect(x, y, w, h);
-	}
-
 	update() {
 		this.y += this.dy * this.speed;
 	}
@@ -58,14 +53,6 @@ export class Ball {
 		this.dy = 0;
 		this.initialSpeed = speed;
 		this.speed = speed;
-	}
-
-	show(context) {
-		const { x, y, r, startAngle, endAngle } = this;
-		context.beginPath();
-		context.arc(x, y, r, startAngle, endAngle);
-		context.closePath();
-		context.fill();
 	}
 
 	start() {

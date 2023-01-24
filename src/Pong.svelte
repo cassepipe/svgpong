@@ -10,6 +10,7 @@
 	let left_score = 0
 	let right_score = 0
 	let playing = false
+	let ball_position = {x: width / 2, y: height / 2}
 
 
 	// SVG parameters
@@ -29,13 +30,34 @@
 
 	$: lpaddle_y = lpaddle_y
 	$: rpaddle_y = rpaddle_y
+
+	function startPlaying()
+	{
+		playing = true
+	}
+
+	function handleKeypress(e: KeyboardEvent)
+	{
+		switch (e.key)
+		{
+			case 'w':
+				lpaddle_y += paddle_speed ; return
+			case 's':
+				lpaddle_y -= paddle_speed ; return
+			case 'ArrowUp':
+				rpaddle_y += paddle_speed ; return
+			case 'ArrowDown':
+				rpaddle_y -= paddle_speed ; return
+			default:
+				playing = false
+		}
+	}
+
 </script>
 
 <div id=game-container
-	on:dblclick={() => { playing = false }}
-	on:keyup={() => { playing = false }}
-	on:keypress={() => { playing = false }}
-	on:keydown={() => { playing = false }}
+	on:click={ () => { playing = false } }
+	on:keydown={ (e) => { if (playing) handleKeypress(e) } }
 	>
 	<div id="left-score"
 		>{left_score}</div>
@@ -43,7 +65,7 @@
 		>{right_score}</div>
 	<button id="play-button"
 		style:opacity={playing ? 0 : 1}
-		on:click={() => { playing = true }}
+		on:click|stopPropagation={() => { playing = true }}
 		>
 		PLAY
 	</button>
@@ -81,7 +103,7 @@
 			fill={paddle_color}
 		/>
 		<circle id=ball
-			cx={width/2} cy={height/2} r={border_width * 1.5}
+			cx={ball_position.x} cy={ball_position.y} r={border_width * 1.5}
 			fill={ball_color}
 		/>
 	</svg>
@@ -97,7 +119,9 @@
 		position: relative;
 	}
 
-	#left-score, #right-score, #play-button {
+	#left-score,
+	#right-score,
+	#play-button {
 		font-family:	'Press Start 2P', Arial;
 		font-size:		22px;
 		font-weight:    bold;
