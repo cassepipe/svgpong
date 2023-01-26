@@ -1,24 +1,28 @@
-export class Paddle {
-	x : number
-	y : number
-	w : number
-	h : number
+class Rectangle
+{
+	constructor( 
+		public x : number,
+		public y : number,
+		public width : number,
+		public height : number,
+	) {
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+	}
+}
+
+export class Paddle extends Rectangle {
 	y0 : number
 	dy: number
 	speed: number
-	keys
-	score : number
 
-	constructor({ x, y, w, h, keys, speed = 3.5, score = 0 }) {
-		this.x = x;
-		this.y = y;
-		this.w = w;
-		this.h = h;
+	constructor( x: number , y: number , w: number , h: number , dy = 1, speed = 1) {
+		super(x, y, w, h)
 		this.y0 = y;
-		this.dy = 0;
+		this.dy = dy;
 		this.speed = speed;
-		this.keys = keys;
-		this.score = score;
 	}
 
 	update() {
@@ -30,25 +34,33 @@ export class Paddle {
 	}
 }
 
-export class Ball {
-	x: number
+class Circle 
+{
+	constructor( 
+		public x : number,
+		public y : number,
+		public r : number,
+	) {
+		this.x = x;
+		this.y = y;
+		this.r = r;
+	}
+}
+
+export class Ball extends Circle
+{
 	x0 : number
-	y : number
 	y0: number
-	r : number
 	dx: number
 	dy: number
 	speed: number
 	initialSpeed: number
-	startAngle = 0;
-	endAngle = Math.PI * 2;
 
-	constructor({ x, y, r, speed = 3 }) {
-		this.x = x;
+	constructor( x: number , y: number, r: number , speed = 1)
+	{
+		super(x, y, r)
 		this.x0 = x;
-		this.y = y;
 		this.y0 = y;
-		this.r = r;
 		this.dx = 0;
 		this.dy = 0;
 		this.initialSpeed = speed;
@@ -57,7 +69,7 @@ export class Ball {
 
 	start() {
 		const maxAngle = 90;
-		const angles = 5;
+		const angles = 5; // Number of potential random starting directions
 		const angle = Math.floor(Math.random() * (angles + 1));
 
 		const theta = ((angle * (maxAngle / angles) - 45) / 180) * Math.PI;
@@ -82,14 +94,14 @@ export class Ball {
 		this.speed = this.initialSpeed;
 	}
 
-	collides(paddle: Paddle) {
+	collides(paddle: Rectangle) {
 		const { x, y, r } = this;
-		if (
-			x + r < paddle.x ||
-			x - r > paddle.x + paddle.w ||
-		y + r < paddle.y ||
-	y - r > paddle.y + paddle.h
-		) {
+		if ( x + r < paddle.x
+			|| x - r > paddle.x + paddle.width
+			|| y + r < paddle.y
+			|| y - r > paddle.y + paddle.height
+		)
+		{
 			return false;
 		}
 		return true;

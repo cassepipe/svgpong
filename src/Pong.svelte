@@ -1,53 +1,63 @@
 <script lang="ts">
-	// General dimensioning
+	import { Paddle, Ball } from "./GameObjects"
+
+	// General parameters
+
+	// Sizing
 	export const margin = 100
 	export const height = window.innerHeight - margin 
 	export const aspect_ratio = 16/9
 	let width = height * aspect_ratio
 	$: width = height * aspect_ratio
+	let border_width = 5
+	let paddle_height = height / 4
+	let paddle_width = border_width * 2
 
-	// Game variables
-	let left_score = 0
-	let right_score = 0
-	let playing = false
-	let ball_position = {x: width / 2, y: height / 2}
-
-
-	// SVG parameters
+	// Colors
 	let court_color = "black"
 	let border_color = "green"
 	let paddle_color = "orange"
 	let ball_color = "red"
-	let border_width = 5
-	let paddle_height = height / 4
 
+	// Initial object positioning
+	const ball_position = {x: width / 2, y: height / 2}
+	const ball_startx = width / 2
+	const ball_starty = height / 2
+	const ball_size = border_width * 1.5;
+	const lpaddle_startx = width / 30
+	const lpaddle_starty = height/2 - paddle_height / 2 
+	const rpaddle_startx = width - width / 30
+	const rpaddle_starty = height/2 - paddle_height / 2 
+
+	// Game variables
+	let playing = false
+	let left_score = 0
+	let right_score = 0
 	const paddle_speed = 5
 
-	let lpaddle_x = width / 30
-	let lpaddle_y = height/2 - paddle_height / 2 
-	let rpaddle_x = width - width / 30
-	let rpaddle_y = height/2 - paddle_height / 2 
 
-	$: lpaddle_y = lpaddle_y
-	$: rpaddle_y = rpaddle_y
+	let lpaddle = new Paddle( lpaddle_startx, lpaddle_starty, paddle_width, paddle_height );
+	let rpaddle = new Paddle( rpaddle_startx, rpaddle_starty, paddle_width, paddle_height );
+	let ball = new Ball(ball_startx, ball_starty, ball_size);
 
 	function startPlaying()
 	{
 		playing = true
+		ball.start();
 	}
 
 	function handleKeypress(e: KeyboardEvent)
 	{
-		switch (e.key)
+		switch (e.code)
 		{
-			case 'w':
-				lpaddle_y += paddle_speed ; return
-			case 's':
-				lpaddle_y -= paddle_speed ; return
+			case 'KeyW':
+				lpaddle.y += paddle_speed ; return
+			case 'KeyS':
+				lpaddle.y -= paddle_speed ; return
 			case 'ArrowUp':
-				rpaddle_y += paddle_speed ; return
+				rpaddle.y += paddle_speed ; return
 			case 'ArrowDown':
-				rpaddle_y -= paddle_speed ; return
+				rpaddle.y -= paddle_speed ; return
 			default:
 				playing = false
 		}
@@ -65,7 +75,7 @@
 		>{right_score}</div>
 	<button id="play-button"
 		style:opacity={playing ? 0 : 1}
-		on:click|stopPropagation={() => { playing = true }}
+		on:click|stopPropagation={ startPlaying }
 		>
 		PLAY
 	</button>
@@ -89,21 +99,21 @@
 			stroke-dasharray="10"
 			/>
 		<rect id=left_paddle
-			x={lpaddle_x}
-			y={lpaddle_y}
-			width={border_width * 2}
+			x={lpaddle.x}
+			y={lpaddle.y}
+			width={paddle_width}
 			height={paddle_height}
 			fill={paddle_color}
 		/>
 		<rect id=right_paddle
-			x={rpaddle_x}
-			y={rpaddle_y}
-			width={border_width * 2}
+			x={rpaddle.x}
+			y={rpaddle.y}
+			width={paddle_width}
 			height={paddle_height}
 			fill={paddle_color}
 		/>
 		<circle id=ball
-			cx={ball_position.x} cy={ball_position.y} r={border_width * 1.5}
+			cx={ball.x} cy={ball.y} r={ball.r}
 			fill={ball_color}
 		/>
 	</svg>
