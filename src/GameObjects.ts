@@ -14,23 +14,23 @@ class Rectangle
 }
 
 export class Paddle extends Rectangle {
+	static speed = 1
+
 	y0 : number
 	dy: number
-	speed: number
 
-	constructor( x: number , y: number , w: number , h: number , dy = 1, speed = 1) {
+	constructor( x: number , y: number , w: number , h: number , dy = 1) {
 		super(x, y, w, h)
 		this.y0 = y;
 		this.dy = dy;
-		this.speed = speed;
 	}
 
 	update() {
-		this.y += this.dy * this.speed;
+		return (this.y += this.dy * Paddle.speed)
 	}
 
 	reset() {
-		this.y = this.y0;
+		return this.y = this.y0;
 	}
 }
 
@@ -49,8 +49,8 @@ class Circle
 
 export class Ball extends Circle
 {
-	x0 : number
-	y0: number
+	readonly x0 : number
+	readonly y0: number
 	dx: number
 	dy: number
 	speed: number
@@ -65,6 +65,7 @@ export class Ball extends Circle
 		this.dy = 0;
 		this.initialSpeed = speed;
 		this.speed = speed;
+		this.start()
 	}
 
 	start() {
@@ -79,19 +80,22 @@ export class Ball extends Circle
 
 		this.dx = Math.random() > 0.5 ? dx : dx * -1;
 		this.dy = dy;
+		return this;
 	}
 
-	update() {
-		this.x += this.dx;
-		this.y += this.dy;
+	update(): [number, number] {
+		return [ this.x += this.dx,
+				this.y += this.dy, ]
 	}
 
+	//reset() : [number, number] {
 	reset() {
 		this.x = this.x0;
 		this.y = this.y0;
-		this.dx = 0;
-		this.dy = 0;
 		this.speed = this.initialSpeed;
+		this.start();
+		//return [ this.x = this.x0, this.y = this.y0, ]
+		return this;
 	}
 
 	collides(paddle: Rectangle) {

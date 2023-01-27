@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Paddle, Ball } from "./GameObjects"
+	import { onMount } from 'svelte'
 
 	// General parameters
 
@@ -33,6 +34,7 @@
 	let playing = false
 	let left_score = 0
 	let right_score = 0
+	Paddle.speed = 5;
 	const paddle_speed = 5
 
 
@@ -40,10 +42,15 @@
 	let rpaddle = new Paddle( rpaddle_startx, rpaddle_starty, paddle_width, paddle_height );
 	let ball = new Ball(ball_startx, ball_starty, ball_size);
 
+	function moveBall()
+	{
+		const ball_position: [number, number] = ball.update();
+		[ ball.x, ball.y ] = ball_position;
+	}
+
 	function startPlaying()
 	{
 		playing = true
-		ball.start();
 	}
 
 	function handleKeypress(e: KeyboardEvent)
@@ -63,6 +70,21 @@
 		}
 	}
 
+	function animate()
+	{
+		const interval = setInterval(moveBall, 10)
+		return () => clearInterval(interval);
+	}
+	
+	// onMount is a function that register another function to be run at mount time
+	//onMount( function ()
+	//{
+	//	const interval = setInterval(moveBall, 10)
+	//	return () => clearInterval(interval);
+	//})
+
+	let destroy : ReturnType<animate>;
+
 </script>
 
 <div id=game-container
@@ -73,12 +95,20 @@
 		>{left_score}</div>
 	<div id="right-score"
 		>{right_score}</div>
-	<button id="play-button"
-		style:opacity={playing ? 0 : 1}
-		on:click|stopPropagation={ startPlaying }
-		>
-		PLAY
-	</button>
+	<div id=menu-container>
+		<button id="play-button"
+			style:opacity={playing ? 0 : 1}
+			 on:click|stopPropagation={ () => { playing = true; destroy = animate() } }
+			>
+			PLAY
+		</button>
+		<button id="reset-button"
+			style:opacity={playing ? 0 : 1}
+			on:click|stopPropagation={ () => { ball = ball.reset(); destroy() } }
+			>
+			RESET
+		</button>
+	</div>
 	<svg
 		{width} {height}
 		style:border={`${border_width}px solid ${border_color}`}
@@ -128,24 +158,33 @@
 		/* Has to be relative so that the scores with position:absolute are contained */
 		position: relative;
 	}
+	#menu-container {
+		position : absolute;
+		display: flex;
+		flex-direction: column;
+	}
 
 	#left-score,
 	#right-score,
-	#play-button {
+	#play-button,
+	#reset-button {
 		font-family:	'Press Start 2P', Arial;
 		font-size:		22px;
 		font-weight:    bold;
-		position: absolute;
 		z-index: 1;
 	}
+	#left-score ,
+	#right-score {
+		top: 10%;
+		position : absolute;
+	}
 	#left-score {
-		top: 40px;
-		left: 80px;
+		left: 25%;
 	}
 	#right-score {
-		top: 40px;
-		right: 80px;
+		right: 25%;
 	}
+	#reset-button,
 	#play-button {
 		color:	black;
 		background-color: green;
@@ -154,6 +193,7 @@
 		padding-top: 5px;
 		padding-left: 7px;
 	}
+	#reset-button:hover,
 	#play-button:hover {
 		color:	green;
 		background-color: white;
