@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { Paddle, Ball } from "./GameObjects"
-	import { onMount } from 'svelte'
 
 	// General parameters
 
@@ -22,6 +21,7 @@
 
 	// Initial object positioning
 	const ball_position = {x: width / 2, y: height / 2}
+		
 	const ball_startx = width / 2
 	const ball_starty = height / 2
 	const ball_size = border_width * 1.5;
@@ -42,70 +42,90 @@
 	let rpaddle = new Paddle( rpaddle_startx, rpaddle_starty, paddle_width, paddle_height );
 	let ball = new Ball(ball_startx, ball_starty, ball_size);
 
+
+	function animate()
+	{
+		if (playing)
+		{
+			const interval = setInterval(moveBall, 30)
+			return () => { clearInterval(interval) };
+		}
+		throw LogicError("animate function should not be called when playing === false")
+	}
+	let destroy : ReturnType<animate>;
+
 	function moveBall()
 	{
+		console.log("moveBall")
 		const ball_position: [number, number] = ball.update();
 		[ ball.x, ball.y ] = ball_position;
 	}
 
 	function startPlaying()
 	{
-		playing = true
+		console.log("startPlaying")
+		if (!playing)
+		{
+			playing = true
+			destroy = animate()
+		}
+	}
+
+	function pause()
+	{
+		console.log("pause")
+		playing = false;
+		destroy();
+	}
+	
+	function reset()
+	{
+		console.log("reset")
+		playing = false;
+		ball = ball.reset();
+		destroy()
 	}
 
 	function handleKeypress(e: KeyboardEvent)
 	{
-		switch (e.code)
+		if (playing)
 		{
-			case 'KeyW':
-				lpaddle.y += paddle_speed ; return
-			case 'KeyS':
-				lpaddle.y -= paddle_speed ; return
-			case 'ArrowUp':
-				rpaddle.y += paddle_speed ; return
-			case 'ArrowDown':
-				rpaddle.y -= paddle_speed ; return
-			default:
-				playing = false
+			switch (e.code)
+			{
+				case 'KeyW':
+					lpaddle.y += paddle_speed ; return
+				case 'KeyS':
+					lpaddle.y -= paddle_speed ; return
+				case 'ArrowUp':
+					rpaddle.y += paddle_speed ; return
+				case 'ArrowDown':
+					rpaddle.y -= paddle_speed ; return
+				default:
+					pause();
+			}
 		}
 	}
-
-	function animate()
-	{
-		const interval = setInterval(moveBall, 10)
-		return () => clearInterval(interval);
-	}
-	
-	// onMount is a function that register another function to be run at mount time
-	//onMount( function ()
-	//{
-	//	const interval = setInterval(moveBall, 10)
-	//	return () => clearInterval(interval);
-	//})
-
-	let destroy : ReturnType<animate>;
-
 </script>
 
 <div id=game-container
-	on:click={ () => { playing = false } }
-	on:keydown={ (e) => { if (playing) handleKeypress(e) } }
+	on:click={ pause }
+	on:keydown={ handleKeypress }
 	>
 	<div id="left-score"
 		>{left_score}</div>
 	<div id="right-score"
 		>{right_score}</div>
 	<div id=menu-container>
-		<button id="play-button"
-			style:opacity={playing ? 0 : 1}
-			 on:click|stopPropagation={ () => { playing = true; destroy = animate() } }
+		<button id="play-button" class="menu-buttons"
+			on:click|stopPropagation={ startPlaying }
+			style:z-index={playing ? -1 : 0}
 			>
 			PLAY
 		</button>
-		<button id="reset-button"
-			style:opacity={playing ? 0 : 1}
-			on:click|stopPropagation={ () => { ball = ball.reset(); destroy() } }
-			>
+		<button id="reset-button" class="menu-buttons"
+			on:click|stopPropagation={ reset }
+			style:z-index={playing ? -1 : 0}
+		>
 			RESET
 		</button>
 	</div>
@@ -171,7 +191,6 @@
 		font-family:	'Press Start 2P', Arial;
 		font-size:		22px;
 		font-weight:    bold;
-		z-index: 1;
 	}
 	#left-score ,
 	#right-score {
@@ -184,8 +203,8 @@
 	#right-score {
 		right: 25%;
 	}
-	#reset-button,
-	#play-button {
+
+	.menu-buttons {
 		color:	black;
 		background-color: green;
 		border: 2px solid white;
@@ -193,10 +212,10 @@
 		padding-top: 5px;
 		padding-left: 7px;
 	}
-	#reset-button:hover,
-	#play-button:hover {
+	.menu-buttons:hover {
 		color:	green;
 		background-color: white;
 		border: 2px solid green;
 	}
+
 </style>
