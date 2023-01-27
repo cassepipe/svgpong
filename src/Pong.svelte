@@ -47,7 +47,7 @@
 	{
 		if (playing)
 		{
-			const interval = setInterval(moveBall, 30)
+			const interval = setInterval(moveBall, 10)
 			return () => { clearInterval(interval) };
 		}
 		throw LogicError("animate function should not be called when playing === false")
@@ -83,6 +83,8 @@
 		console.log("reset")
 		playing = false;
 		ball = ball.reset();
+		lpaddle = lpaddle.reset() 
+		rpaddle = rpaddle.reset() 
 		destroy()
 	}
 
@@ -93,13 +95,13 @@
 			switch (e.code)
 			{
 				case 'KeyW':
-					lpaddle.y += paddle_speed ; return
+					if (lpaddle.y > 0) lpaddle.y -= paddle_speed ; return
 				case 'KeyS':
-					lpaddle.y -= paddle_speed ; return
+					if (lpaddle.y + lpaddle.height < height) lpaddle.y += paddle_speed ; return
 				case 'ArrowUp':
-					rpaddle.y += paddle_speed ; return
+					if (rpaddle.y > 0) rpaddle.y -= paddle_speed ; return
 				case 'ArrowDown':
-					rpaddle.y -= paddle_speed ; return
+					if (rpaddle.y + rpaddle.height < height) rpaddle.y += paddle_speed ; return
 				default:
 					pause();
 			}
@@ -115,20 +117,20 @@
 		>{left_score}</div>
 	<div id="right-score"
 		>{right_score}</div>
-	<div id=menu-container>
-		<button id="play-button" class="menu-buttons"
-			on:click|stopPropagation={ startPlaying }
-			style:z-index={playing ? -1 : 0}
+	{#if !playing}
+		<div id=menu-container>
+			<button id="play-button" class="menu-buttons"
+				on:click|stopPropagation={ startPlaying }
+				>
+				PLAY
+			</button>
+			<button id="reset-button" class="menu-buttons"
+				on:click|stopPropagation={ reset }
 			>
-			PLAY
-		</button>
-		<button id="reset-button" class="menu-buttons"
-			on:click|stopPropagation={ reset }
-			style:z-index={playing ? -1 : 0}
-		>
-			RESET
-		</button>
-	</div>
+				RESET
+			</button>
+		</div>
+	{/if}
 	<svg
 		{width} {height}
 		style:border={`${border_width}px solid ${border_color}`}

@@ -30,7 +30,8 @@ export class Paddle extends Rectangle {
 	}
 
 	reset() {
-		return this.y = this.y0;
+		this.y = this.y0;
+		return this;
 	}
 }
 
