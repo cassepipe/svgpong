@@ -62,14 +62,12 @@ export class Ball extends Circle
 		super(x, y, r)
 		this.x0 = x;
 		this.y0 = y;
-		this.dx = 0;
-		this.dy = 0;
 		this.initialSpeed = speed;
 		this.speed = speed;
-		this.start()
+		[this.dx, this.dy] = this.start()
 	}
 
-	start() {
+	private start(): [number, number] {
 		const maxAngle = 90;
 		const angles = 5; // Number of potential random starting directions
 		const angle = Math.floor(Math.random() * (angles + 1));
@@ -79,14 +77,12 @@ export class Ball extends Circle
 		const dx = Math.cos(theta) * this.speed;
 		const dy = Math.sin(theta) * this.speed;
 
-		this.dx = Math.random() > 0.5 ? dx : dx * -1;
-		this.dy = dy;
-		return this;
+		return [ Math.random() > 0.5 ? dx : dx * -1, dy]
 	}
 
 	update(): [number, number] {
-		return [ this.x += this.dx,
-				this.y += this.dy, ]
+		return [ this.x += this.dx * this.speed,
+				this.y += this.dy * this.speed, ]
 	}
 
 	//reset() : [number, number] {
@@ -94,7 +90,7 @@ export class Ball extends Circle
 		this.x = this.x0;
 		this.y = this.y0;
 		this.speed = this.initialSpeed;
-		this.start();
+		[this.dx, this.dy] = this.start();
 		//return [ this.x = this.x0, this.y = this.y0, ]
 		return this;
 	}

@@ -2,7 +2,7 @@
 	import { Paddle, Ball } from "./GameObjects"
 
 	// General parameters
-	export const interval = 1000
+	export const interval = 1
 
 	// Sizing
 	export const margin = 100
@@ -35,9 +35,7 @@
 	let playing = false
 	let left_score = 0
 	let right_score = 0
-	Paddle.speed = 5;
-	const paddle_speed = 5
-
+	Paddle.speed = 10;
 
 	let lpaddle = new Paddle( lpaddle_startx, lpaddle_starty, paddle_width, paddle_height );
 	let rpaddle = new Paddle( rpaddle_startx, rpaddle_starty, paddle_width, paddle_height );
@@ -58,6 +56,26 @@
 	function moveBall()
 	{
 		console.log("moveBall")
+		if (ball.x < 0)
+		{
+			left_score++
+			ball.reset()
+			return
+		}
+		if (ball.x > width)
+		{
+			right_score++
+			ball.reset()
+			return
+		}
+		if (ball.y < 0 || ball.y > height)
+		{
+			ball.dy *= -1;
+		}
+		if (ball.collides(lpaddle) || ball.collides(rpaddle))
+		{
+			ball.dx *= -1;
+		}
 		const ball_position: [number, number] = ball.update();
 		[ ball.x, ball.y ] = ball_position;
 	}
@@ -86,6 +104,7 @@
 		ball = ball.reset();
 		lpaddle = lpaddle.reset() 
 		rpaddle = rpaddle.reset() 
+		left_score = right_score = 0;
 		destroy()
 	}
 
@@ -98,13 +117,13 @@
 			switch (e.code)
 			{
 				case 'KeyW':
-					if (lpaddle.y > 0) lpaddle.y -= paddle_speed ; return
+					if (lpaddle.y > 0) lpaddle.y -= Paddle.speed ; return
 				case 'KeyS':
-					if (lpaddle.y + lpaddle.height < height) lpaddle.y += paddle_speed ; return
+					if (lpaddle.y + lpaddle.height < height) lpaddle.y += Paddle.speed ; return
 				case 'ArrowUp':
-					if (rpaddle.y > 0) rpaddle.y -= paddle_speed ; return
+					if (rpaddle.y > 0) rpaddle.y -= Paddle.speed ; return
 				case 'ArrowDown':
-					if (rpaddle.y + rpaddle.height < height) rpaddle.y += paddle_speed ; return
+					if (rpaddle.y + rpaddle.height < height) rpaddle.y += Paddle.speed ; return
 				default:
 					pause();
 			}
