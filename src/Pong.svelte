@@ -89,7 +89,7 @@
 		destroy()
 	}
 
-	function handleKeypress(e: KeyboardEvent)
+	function handleKeydown(e: KeyboardEvent)
 	{
 		console.log(`You entered ${e.key}`)
 		if (playing)
@@ -112,8 +112,8 @@
 	}
 </script>
 
+<svelte:window on:keydown={handleKeydown}/>
 <div id=game-container
-	on:keydown={ handleKeypress }
 	on:click={ pause }
 	>
 	<div id="left-score"
