@@ -2,6 +2,7 @@
 	import { Paddle, Ball } from "./GameObjects"
 
 	// General parameters
+	export const interval = 1000
 
 	// Sizing
 	export const margin = 100
@@ -47,8 +48,8 @@
 	{
 		if (playing)
 		{
-			const interval = setInterval(moveBall, 10)
-			return () => { clearInterval(interval) };
+			const interval_obj = setInterval(moveBall, interval)
+			return () => { clearInterval(interval_obj) };
 		}
 		throw LogicError("animate function should not be called when playing === false")
 	}
@@ -90,8 +91,10 @@
 
 	function handleKeypress(e: KeyboardEvent)
 	{
+		console.log(`You entered ${e.key}`)
 		if (playing)
 		{
+			console.log(`You entered ${e.key}`)
 			switch (e.code)
 			{
 				case 'KeyW':
@@ -110,15 +113,16 @@
 </script>
 
 <div id=game-container
-	on:click={ pause }
 	on:keydown={ handleKeypress }
+	on:click={ pause }
 	>
 	<div id="left-score"
 		>{left_score}</div>
 	<div id="right-score"
 		>{right_score}</div>
 	{#if !playing}
-		<div id=menu-container>
+		<div id=menu-container
+		>
 			<button id="play-button" class="menu-buttons"
 				on:click|stopPropagation={ startPlaying }
 				>
